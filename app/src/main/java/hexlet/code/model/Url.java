@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Url {
+public final class Url {
     private long id;
     private String name;
     private LocalDateTime createdAt;

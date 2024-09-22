@@ -27,9 +27,12 @@ dependencies {
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("com.h2database:h2:2.2.224")
     implementation("org.postgresql:postgresql:42.7.4")
+    implementation("org.apache.commons:commons-lang3:3.0")
 
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.assertj:assertj-core:3.26.3")
+    testImplementation("com.konghq:unirest-java:3.14.5")
 }
 
 tasks.test {

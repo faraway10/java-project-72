@@ -62,7 +62,7 @@ public class App {
             statement.execute(sql);
         }
 
-        BaseRepository.dataSource = dataSource;
+        BaseRepository.setDataSource(dataSource);
 
         var app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
