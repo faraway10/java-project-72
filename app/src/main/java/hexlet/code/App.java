@@ -19,13 +19,20 @@ import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 public class App {
+    private static boolean isTestingMode = false;
     private static int getPort() {
         String port = System.getenv().getOrDefault("PORT", "7070");
         return Integer.valueOf(port);
     }
 
     private static String getJdbcUrl() {
-        return System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
+        String envDbConn = System.getenv().get("JDBC_DATABASE_URL");
+
+        if (isTestingMode || envDbConn == null) {
+            return "jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;";
+        } else {
+            return envDbConn;
+        }
     }
 
     private static String readResourceFile(String fileName) throws IOException {
@@ -33,6 +40,10 @@ public class App {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             return reader.lines().collect(Collectors.joining("\n"));
         }
+    }
+
+    public static void setTestingMode() {
+        isTestingMode = true;
     }
 
     private static TemplateEngine createTemplateEngine() {

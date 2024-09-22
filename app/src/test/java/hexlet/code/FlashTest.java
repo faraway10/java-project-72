@@ -22,6 +22,7 @@ class FlashTest {
 
     @BeforeEach
     public void beforeAll() throws SQLException, IOException {
+        App.setTestingMode();
         app = App.getApp();
         int port = getPort();
         app.start(port);

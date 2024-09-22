@@ -2,6 +2,10 @@ package hexlet.code;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import hexlet.code.repository.UrlRepository;
 import org.apache.commons.lang3.StringUtils;
 
 import io.javalin.Javalin;
@@ -22,6 +26,7 @@ public class AppTest {
 
     @BeforeEach
     public final void setUp() throws IOException, SQLException {
+        App.setTestingMode();
         app = App.getApp();
     }
 
@@ -50,6 +55,7 @@ public class AppTest {
             var response = client.post("/urls", requestBody);
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body().string()).contains("https://github.com:443");
+            assertTrue(UrlRepository.existsByName("https://github.com:443"));
 
             response = client.post("/urls", requestBody);
             assertThat(response.code()).isEqualTo(200);
@@ -65,6 +71,7 @@ public class AppTest {
             var response = client.post("/urls", requestBody);
             assertThat(response.code()).isEqualTo(200);
             assertThat(response.body().string()).doesNotContain("bad_url");
+            assertFalse(UrlRepository.existsByName("bad_url"));
         });
     }
 
