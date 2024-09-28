@@ -44,6 +44,10 @@ public class UrlRepository extends BaseRepository {
                 var url = new Url(urlName);
                 url.setId(id);
                 url.setCreatedAt(createdAt);
+
+                var urlChecks = UrlCheckRepository.getEntitiesByParentId(id);
+                url.setUrlChecks(urlChecks);
+
                 result.add(url);
             }
             return result;
@@ -73,6 +77,10 @@ public class UrlRepository extends BaseRepository {
                 var url = new Url(name);
                 url.setId(id);
                 url.setCreatedAt(createdAt);
+
+                var urlChecks = UrlCheckRepository.getEntitiesByParentId(id);
+                url.setUrlChecks(urlChecks);
+
                 return Optional.of(url);
             }
             return Optional.empty();

@@ -30,6 +30,8 @@ public class UrlsController {
         var url = UrlRepository.find(id)
                 .orElseThrow(() -> new NotFoundResponse("Url with id = " + id + " not found"));
         var page = new UrlPage(url);
+        page.setFlash(ctx.consumeSessionAttribute("flash"));
+        page.setFlashType(ctx.consumeSessionAttribute("flashType"));
         ctx.render("urls/show.jte", model("page", page));
     }
 

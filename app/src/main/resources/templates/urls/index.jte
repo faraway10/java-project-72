@@ -20,8 +20,13 @@ content = @`
             <tr>
                 <td>${url.getId()}</td>
                 <td><a href="${NamedRoutes.urlPath(url.getId())}">${url.getName()}</a></td>
-                <td></td>
-                <td></td>
+                @if(!url.getUrlChecks().isEmpty())
+                    <td>${url.getUrlChecks().getFirst().getCreatedAtFormatted()}</td>
+                    <td>${url.getUrlChecks().getFirst().getStatusCode()}</td>
+                @else
+                    <td></td>
+                    <td></td>
+                @endif
             </tr>
         @endfor
         </tbody>
