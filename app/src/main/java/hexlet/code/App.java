@@ -66,8 +66,7 @@ public class App {
 
         var dataSource = new HikariDataSource(hikariConfig);
 
-        var fileName = System.getenv().get("JDBC_DATABASE_URL") == null ? "schema.sql" : "schema_postgres.sql";
-        var sql = readResourceFile(fileName);
+        var sql = readResourceFile("schema.sql");
 
         try (var connection = dataSource.getConnection();
              var statement = connection.createStatement()) {
