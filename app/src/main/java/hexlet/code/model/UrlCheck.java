@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -27,9 +26,5 @@ public final class UrlCheck {
         title = checkTitle;
         h1 = checkH1;
         description = checkDescription;
-    }
-
-    public String getCreatedAtFormatted() {
-        return createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 }

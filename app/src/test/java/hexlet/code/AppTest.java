@@ -62,7 +62,6 @@ public class AppTest {
 
     @BeforeEach
     public final void setUp() throws IOException, SQLException {
-        App.setTestingMode();
         app = App.getApp();
     }
 

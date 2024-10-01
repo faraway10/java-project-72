@@ -12,6 +12,7 @@ import io.javalin.http.NotFoundResponse;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.sql.SQLException;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
@@ -43,28 +44,34 @@ public class UrlsController {
     }
 
     public static void create(Context ctx) throws SQLException {
+        var inputUrl = ctx.formParam("url");
+        URL parsedUrl;
         try {
-            var uri = new URI(ctx.formParam("url")).toURL();
-            var protocol = uri.getProtocol();
-            var authority = uri.getAuthority();
-            var name = String.format("%s://%s", protocol, authority);
-
-            if (UrlRepository.existsByName(name)) {
-                ctx.sessionAttribute("flash", "Страница уже существует");
-                ctx.sessionAttribute("flashType", "info");
-                ctx.redirect(NamedRoutes.rootPath());
-                return;
-            }
-
-            var url = new Url(name);
-            UrlRepository.save(url);
-            ctx.sessionAttribute("flash", "Страница успешно добавлена");
-            ctx.sessionAttribute("flashType", "success");
-            ctx.redirect(NamedRoutes.urlsPath());
+            parsedUrl = new URI(inputUrl).toURL();
         } catch (MalformedURLException | URISyntaxException | IllegalArgumentException e) {
             ctx.sessionAttribute("flash", "Некорректный URL");
             ctx.sessionAttribute("flashType", "danger");
             ctx.redirect(NamedRoutes.rootPath());
+            return;
         }
+
+        var normalizedUrl = String.format(
+                "%s://%s",
+                parsedUrl.getProtocol(),
+                parsedUrl.getAuthority()
+        );
+
+        if (UrlRepository.existsByName(normalizedUrl)) {
+            ctx.sessionAttribute("flash", "Страница уже существует");
+            ctx.sessionAttribute("flashType", "info");
+            ctx.redirect(NamedRoutes.rootPath());
+            return;
+        }
+
+        var url = new Url(normalizedUrl);
+        UrlRepository.save(url);
+        ctx.sessionAttribute("flash", "Страница успешно добавлена");
+        ctx.sessionAttribute("flashType", "success");
+        ctx.redirect(NamedRoutes.urlsPath());
     }
 }

@@ -1,7 +1,6 @@
 package hexlet.code.model;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import lombok.Getter;
@@ -16,9 +15,5 @@ public final class Url {
     private List<UrlCheck> urlChecks;
     public Url(String urlName) {
         name = urlName;
-    }
-
-    public String getCreatedAtFormatted() {
-        return createdAt != null ? createdAt.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : null;
     }
 }

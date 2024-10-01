@@ -17,7 +17,7 @@ public class UrlChecksController {
     public static void create(Context ctx) throws SQLException {
         long urlId = ctx.pathParamAsClass("id", Long.class).get();
         var url = UrlRepository.find(urlId).orElseThrow(NoSuchElementException::new);
-        HttpResponse<String> response = null;
+        HttpResponse<String> response;
 
         try {
             response = Unirest.get(url.getName()).asString();
@@ -28,15 +28,23 @@ public class UrlChecksController {
             return;
         }
 
-        String htmlContent = response.getBody();
-        Document document = Jsoup.parse(htmlContent);
+        UrlCheck urlCheck;
+        try {
+            String htmlContent = response.getBody();
+            Document document = Jsoup.parse(htmlContent);
 
-        var urlCheck = new UrlCheck(
-                response.getStatus(),
-                document.title(),
-                document.select("h1").text(),
-                document.select("meta[name=description]").attr("content")
-        );
+            urlCheck = new UrlCheck(
+                    response.getStatus(),
+                    document.title(),
+                    document.select("h1").text(),
+                    document.select("meta[name=description]").attr("content")
+            );
+        } catch (Exception e) {
+            ctx.sessionAttribute("flash", "Ошибка при парсинге контента сайта");
+            ctx.sessionAttribute("flashType", "danger");
+            ctx.redirect(NamedRoutes.urlPath(urlId));
+            return;
+        }
 
         urlCheck.setUrlId(urlId);
         UrlCheckRepository.save(urlCheck);
