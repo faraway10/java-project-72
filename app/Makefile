@@ -1,4 +1,7 @@
 # for unix
+install-dist:
+	./gradlew installDist
+
 run-dist:
 	./build/install/app/bin/app
 
@@ -12,6 +15,9 @@ report:
 	./gradlew jacocoTestReport
 
 # for windows
+install-dist-win:
+	.\gradlew installDist
+
 run-dist-win:
 	.\build\install\app\bin\app
 

@@ -2,7 +2,6 @@ package hexlet.code;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -90,22 +89,24 @@ public class AppTest {
     public void testCreateUrl() {
         JavalinTest.test(app, (server, client) -> {
             var requestBody = "url=https%3A%2F%2Fgithub.com%3A443%2Ffaraway10%2Fjava-project-72";
+            var parsedUrl = "https://github.com:443";
 
             var response = client.post("/urls", requestBody);
             assertThat(response.code()).isEqualTo(200);
-            assertThat(response.body().string()).contains("https://github.com:443");
-            assertTrue(UrlRepository.existsByName("https://github.com:443"));
+            assertThat(response.body().string()).contains(parsedUrl);
 
             var response2 = client.post("/urls", requestBody);
             assertThat(response2.code()).isEqualTo(200);
 
             var response3 = client.get("/urls");
             assertEquals(1, StringUtils.countMatches(
-                    response3.body().string(), "https://github.com:443"));
+                    response3.body().string(), parsedUrl));
 
-            var response4 = client.get("/urls/1");
+            var createdUrl = UrlRepository.findByName(parsedUrl).get();
+
+            var response4 = client.get("/urls/" + createdUrl.getId());
             assertThat(response4.code()).isEqualTo(200);
-            assertThat(response4.body().string()).contains("https://github.com:443");
+            assertThat(response4.body().string()).contains(parsedUrl);
         });
     }
 
